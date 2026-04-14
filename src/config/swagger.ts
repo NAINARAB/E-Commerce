@@ -5,23 +5,18 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "My API",
-      version: "1.0.0",
-      description: "API documentation using Swagger",
+    definition: {
+        openapi: "3.0.0",
+        info: {
+            title: "My API",
+            version: "1.0.0",
+            description: "API documentation using Swagger",
+        },
     },
-    servers: [
-      {
-        url: process.env.APP_URL,
-      },
+    apis: [
+        path.join(__dirname, "../routes/**/*.ts"),
+        path.join(__dirname, "../controller/**/*.ts"),
     ],
-  },
-  apis: [
-    path.join(__dirname, "../routes/**/*.ts"),
-    path.join(__dirname, "../controller/**/*.ts"),
-  ],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

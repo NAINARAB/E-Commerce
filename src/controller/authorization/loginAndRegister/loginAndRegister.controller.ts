@@ -107,7 +107,7 @@ export const login = async (req: Request, res: Response) => {
 
         if (!username || !password) return invalidInput(res, 'username and password are required');
 
-        const user: any = await UserMaster.findOne({
+        const user: any = await UserMaster.unscoped().findOne({
             where: {
                 mobile: username,
                 isActive: 1

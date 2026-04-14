@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
@@ -10,13 +10,9 @@ import { swaggerSpec, swaggerUi } from "./config/swagger";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 7071;
 
-app.use(cors({
-    origin: "*",
-    // http://localhost:5174
-    credentials: true,
-}));
+app.use(cors());
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -35,7 +31,13 @@ connectDB();
 })();
 
 app.use('/api', appRoutes);
-app.use("/api", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use("/api", (req: Request, res: Response, next: NextFunction) => {
+    const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+    const host = req.get("host");
+    swaggerSpec.servers = [{ url: `${protocol}://${host}` }];
+    next();
+}, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
