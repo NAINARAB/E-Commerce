@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { userCreateSchema, UserMaster, userUpdateSchema } from "../../../models/users/users.models";
-import { UserTypeMaster } from "../../../models/users/userType.model";
 import { created, dataFound, deleted, invalidInput, notFound, sentData, servError, updated } from "../../../response";
 import { validateBody } from "../../../middleware/zodValidator";
 import { hashPassword, verifyPassword } from "../../authorization/loginAndRegister/hash";
@@ -56,15 +55,11 @@ export const createUser = async (req: Request, res: Response) => {
 
         const hashed = await hashPassword(validatedData.password);
 
-        const checkUserType = await UserTypeMaster.findByPk(validatedData.userType);
-        if (!checkUserType) return invalidInput(res, 'Invalid userType ID');
-
         const newUser = await UserMaster.create({
             ...validatedData,
             password: hashed,
-            oldPassword: hashed,
-            createdAt: new Date(),
-            isActive: true,
+            old_password: hashed,
+            is_active: true,
         });
 
         created(res, newUser);
@@ -82,14 +77,10 @@ export const updateUser = async (req: Request, res: Response) => {
         const user = await UserMaster.findByPk(validatedData.id);
         if (!user) return notFound(res, 'User not found');
 
-        const checkUserType = await UserTypeMaster.findByPk(validatedData.userType);
-        if (!checkUserType) return invalidInput(res, 'Invalid userType ID');
-
         delete (validatedData as any).password;
 
         await user.update({
             ...validatedData,
-            updatedAt: new Date(),
         });
 
         updated(res, user);
@@ -106,7 +97,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         const user = await UserMaster.findByPk(id as string);
         if (!user) return notFound(res, 'User not found');
 
-        await user.update({ isActive: false });
+        await user.update({ is_active: false });
         deleted(res);
     } catch (e) {
         servError(e, res);

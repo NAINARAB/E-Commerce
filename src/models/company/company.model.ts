@@ -6,29 +6,57 @@ export interface CompanyAttributes {
     id?: string;
     code: string;
     name: string;
-    isActive?: boolean | null;
-    erpId?: string | null;
-    createdAt?: Date | null;
-    updatedAt?: Date | null;
+    is_active?: boolean | null;
+    erp_id?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
 }
 
-export type CompanyCreationAttributes = Optional<CompanyAttributes, 'id' | 'isActive' | 'createdAt' | 'updatedAt'>;
+export type CompanyCreationAttributes = Optional<CompanyAttributes, 'id' | 'is_active' | 'created_at' | 'updated_at'>;
 
 export class Company extends Model<CompanyAttributes, CompanyCreationAttributes> {}
 
 Company.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    code: { type: DataTypes.STRING, allowNull: false, unique: true },
-    name: { type: DataTypes.STRING, allowNull: false },
-    isActive: { type: DataTypes.BOOLEAN, field: 'is_active', defaultValue: true },
-    erpId: { type: DataTypes.STRING, field: 'erp_id', allowNull: true },
-    createdAt: { type: DataTypes.DATE, field: 'created_at', defaultValue: DataTypes.NOW },
-    updatedAt: { type: DataTypes.DATE, field: 'updated_at', allowNull: true }
-}, { sequelize, tableName: 'companies', modelName: 'Company', timestamps: false, freezeTableName: true });
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    code: { 
+        type: DataTypes.STRING, 
+        allowNull: false, 
+        unique: true 
+    },
+    name: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    is_active: { 
+        type: DataTypes.BOOLEAN, 
+        allowNull: true, 
+        defaultValue: true 
+    },
+    erp_id: { 
+        type: DataTypes.STRING, 
+        allowNull: true 
+    }
+}, { 
+    sequelize, 
+    tableName: 'tbl_companies', 
+    modelName: 'Company', 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+    freezeTableName: true,
+});
+
+// Company.hasMany(Shop, {
+//     foreignKey: 'company_id',
+//     as: 'shops' 
+// })
 
 export const companySchema = z.object({
     code: z.string().min(1),
     name: z.string().min(1),
-    isActive: z.boolean().optional(),
-    erpId: z.string().optional().nullable(),
+    erp_id: z.string().optional().nullable(),
 });

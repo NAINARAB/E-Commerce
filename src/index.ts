@@ -23,7 +23,7 @@ connectDB();
 (async () => {
     try {
         await sequelize.authenticate();
-        // await sequelize.sync({ alter: true });
+        await sequelize.sync();
         console.log('seqalizer initialized');
     } catch (err) {
         console.error('seqalizer initialization failed', err);

@@ -1,47 +1,63 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from "../../config/sequalizer";
 import { z } from "zod";
-
+import { Company } from './company.model';
 
 export interface ShopAttributes {
     id?: string;
-    companyId: string;
+    company_id: string;
     code: string;
     name: string;
-    branchName?: string | null;
-    erpId?: string | null;
-    isActive?: boolean | null;
-    createdAt?: Date | null;
-    updatedAt?: Date | null;
+    erp_id?: string | null;
+    is_active?: boolean | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
 }
 
-export type ShopCreationAttributes = Optional<ShopAttributes, 'id' | 'branchName' | 'erpId' | 'isActive' | 'createdAt' | 'updatedAt'>;
-
+export type ShopCreationAttributes = Optional<ShopAttributes, 'id' | 'erp_id' | 'is_active' | 'created_at' | 'updated_at'>;
 export class Shop extends Model<ShopAttributes, ShopCreationAttributes> {}
 
 Shop.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    companyId: { type: DataTypes.UUID, field: 'company_id', allowNull: false },
-    code: { type: DataTypes.STRING, allowNull: false },
-    name: { type: DataTypes.STRING, allowNull: false },
-    branchName: { type: DataTypes.STRING, field: 'branch_name', allowNull: true },
-    erpId: { type: DataTypes.STRING, field: 'erp_id', allowNull: true },
-    isActive: { type: DataTypes.BOOLEAN, field: 'is_active', defaultValue: true },
-    createdAt: { type: DataTypes.DATE, field: 'created_at', defaultValue: DataTypes.NOW },
-    updatedAt: { type: DataTypes.DATE, field: 'updated_at', allowNull: true }
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    company_id: { 
+        type: DataTypes.UUID, 
+        allowNull: false 
+    },
+    code: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    name: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    erp_id: { 
+        type: DataTypes.STRING, 
+        allowNull: true 
+    },
+    is_active: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: true 
+    }
 }, { 
     sequelize, 
-    tableName: 'shops', 
+    tableName: 'tbl_shops', 
     modelName: 'Shop', 
-    timestamps: false, 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
     freezeTableName: true 
 });
 
+Shop.belongsTo(Company, { foreignKey: 'company_id', targetKey: 'id' });
+
 export const shopSchema = z.object({
-    companyId: z.string(),
+    company_id: z.string(),
     code: z.string().min(1),
     name: z.string().min(1),
-    branchName: z.string().optional().nullable(),
-    erpId: z.string().optional().nullable(),
-    isActive: z.boolean().optional()
+    erp_id: z.string().optional().nullable(),
 });

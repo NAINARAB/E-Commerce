@@ -7,7 +7,6 @@ import { createUser } from "../../masters/users/user.controller";
 
 export type JwtUser = {
     id: string;
-    userType: string;
     name: string;
 };
 
@@ -31,10 +30,6 @@ export type JwtUser = {
  *           schema:
  *             type: object
  *             properties:
- *               userType:
- *                 type: string
- *                 description: The UUID of the user type.
- *                 example: 4356789098765645356
  *               name:
  *                 type: string
  *                 description: The user's name.
@@ -110,7 +105,7 @@ export const login = async (req: Request, res: Response) => {
         const user: any = await UserMaster.unscoped().findOne({
             where: {
                 mobile: username,
-                isActive: 1
+                is_active: 1
             }
         });
 
@@ -121,7 +116,6 @@ export const login = async (req: Request, res: Response) => {
 
         const payload: JwtUser = {
             id: user.id,
-            userType: user.userType,
             name: user.name,
         };
 

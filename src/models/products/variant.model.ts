@@ -1,62 +1,116 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from "../../config/sequalizer";
-import { Attribute, AttributeValue } from './attributes.model';
 import { ProductMaster } from './product.model';
+import { z } from 'zod';
 
 // --- ProductVariant ---
-export interface ProductVariantAttributes {
-    id?: string;
-    productId: string;
-    sku: string;
+export interface ProductVariants {
+    id: string;
     variantName: string;
-    barcode?: string | null;
-    mrp?: number | null;
-    salePrice?: number | null;
-    isDefault?: boolean | null;
-    isActive?: boolean | null;
-    createdAt?: Date | null;
-    updatedAt?: Date | null;
+    is_active: boolean;
+    created_at?: Date | null;
+    updated_at?: Date | null;
 }
 
-export type ProductVariantCreationAttributes = Optional<ProductVariantAttributes, 'id' | 'barcode' | 'mrp' | 'salePrice' | 'isDefault' | 'isActive' | 'createdAt' | 'updatedAt'>;
+export interface ProductVariantValues {
+    id: string;
+    variant_id: string;
+    product_id: string;
+    created_at?: Date | null;
+    updated_at?: Date | null;
+}
 
-export class ProductVariant extends Model<ProductVariantAttributes, ProductVariantCreationAttributes> {}
+export type ProductVariantCreationAttributes = Optional<ProductVariants, 'id' | 'is_active'>;
+
+export class ProductVariant extends Model<ProductVariants, ProductVariantCreationAttributes> implements ProductVariants {
+    declare id: string;
+    declare variantName: string;
+    declare is_active: boolean;
+    declare created_at?: Date | null;
+    declare updated_at?: Date | null;
+}
+
+export type ProductVariantValueCreationAttributes = Optional<ProductVariantValues, 'id'>;
+
+export class ProductVariantValue extends Model<ProductVariantValues, ProductVariantValueCreationAttributes> implements ProductVariantValues {
+    declare id: string;
+    declare variant_id: string;
+    declare product_id: string;
+    declare created_at?: Date | null;
+    declare updated_at?: Date | null;
+}
 
 ProductVariant.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    productId: { type: DataTypes.UUID, field: 'product_id', allowNull: false },
-    sku: { type: DataTypes.STRING, allowNull: false, unique: true },
-    variantName: { type: DataTypes.STRING, field: 'variant_name', allowNull: false },
-    barcode: { type: DataTypes.STRING, allowNull: true },
-    mrp: { type: DataTypes.DECIMAL, allowNull: true },
-    salePrice: { type: DataTypes.DECIMAL, field: 'sale_price', allowNull: true },
-    isDefault: { type: DataTypes.BOOLEAN, field: 'is_default', defaultValue: false },
-    isActive: { type: DataTypes.BOOLEAN, field: 'is_active', defaultValue: true },
-    createdAt: { type: DataTypes.DATE, field: 'created_at', defaultValue: DataTypes.NOW },
-    updatedAt: { type: DataTypes.DATE, field: 'updated_at', allowNull: true }
-}, { sequelize, tableName: 'product_variants', modelName: 'ProductVariant', timestamps: false, freezeTableName: true });
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    variantName: { 
+        type: DataTypes.STRING, 
+        field: 'variant_name', 
+        allowNull: false 
+    },
+    is_active: { 
+        type: DataTypes.BOOLEAN, 
+        field: 'is_active', 
+        defaultValue: true 
+    },
+}, { 
+    sequelize, 
+    tableName: 'tbl_product_variants', 
+    modelName: 'ProductVariant', 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at', 
+    freezeTableName: true,
+    indexes: [
+        {
+            unique: true,
+            fields: ['variant_name'],
+        },
+    ],
+});
 
-// --- ProductVariantAttribute ---
-export interface ProductVariantAttributeAttributes {
-    id?: string;
-    variantId: string;
-    attributeId: string;
-    attributeValueId: string;
-}
+ProductVariantValue.init({
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    product_id: { 
+        type: DataTypes.UUID, 
+        field: 'product_id', 
+        allowNull: false 
+    },
+    variant_id: { 
+        type: DataTypes.UUID, 
+        field: 'variant_id', 
+        allowNull: false 
+    },
+}, { 
+    sequelize, 
+    tableName: 'tbl_product_variant_values', 
+    modelName: 'ProductVariantValue', 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at', 
+    freezeTableName: true,
+});
 
-export type ProductVariantAttributeCreationAttributes = Optional<ProductVariantAttributeAttributes, 'id'>;
+ProductVariant.hasMany(ProductVariantValue, { foreignKey: 'variant_id' });
+ProductVariantValue.belongsTo(ProductVariant, { foreignKey: 'variant_id' });
+ProductVariantValue.belongsTo(ProductMaster, { foreignKey: 'product_id' });
 
-export class ProductVariantAttribute extends Model<ProductVariantAttributeAttributes, ProductVariantAttributeCreationAttributes> {}
+export const productVariantSchema = z.object({
+    id: z.string().optional(),
+    variantName: z.string('Variant name is required'),
+    is_active: z.boolean('Is active is required').default(true),
+    product_data: z.array(z.string()).min(1, 'Product data is required'),
+});
 
-ProductVariantAttribute.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    variantId: { type: DataTypes.UUID, field: 'variant_id', allowNull: false },
-    attributeId: { type: DataTypes.UUID, field: 'attribute_id', allowNull: false },
-    attributeValueId: { type: DataTypes.UUID, field: 'attribute_value_id', allowNull: false }
-}, { sequelize, tableName: 'product_variant_attributes', modelName: 'ProductVariantAttribute', timestamps: false, freezeTableName: true });
-
-
-ProductVariant.belongsTo(ProductMaster, { foreignKey: 'productId', targetKey: 'id' });
-ProductVariantAttribute.belongsTo(ProductVariant, { foreignKey: 'variantId', targetKey: 'id' });
-ProductVariantAttribute.belongsTo(Attribute, { foreignKey: 'attributeId', targetKey: 'id' });
-ProductVariantAttribute.belongsTo(AttributeValue, { foreignKey: 'attributeValueId', targetKey: 'id' });
+export const productVariantValueSchema = z.object({
+    id: z.string().optional(),
+    product_id: z.string('Product id is required'),
+    variant_id: z.string('Variant id is required'),
+});

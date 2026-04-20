@@ -2,24 +2,22 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from "../../config/sequalizer";
 import { z } from "zod";
-import { UserTypeMaster } from './userType.model';
 
 const modelName = 'UserMaster';
 
 export interface UserAttributes {
     id?: string;
-    userType: string;
     name: string;
     email: string;
     mobile: string;
     password: string;
-    oldPassword?: string | null | undefined;
-    createdAt?: Date | null | undefined;
-    updatedAt?: Date | null | undefined;
-    isActive?: boolean | null | undefined;
+    old_password?: string | null | undefined;
+    created_at?: Date | null | undefined;
+    updated_at?: Date | null | undefined;
+    is_active?: boolean | null | undefined;
 }
 
-type UserCreationAttributes = Optional<UserAttributes, 'id' | 'oldPassword' | 'createdAt' | 'updatedAt' | 'isActive'>;
+type UserCreationAttributes = Optional<UserAttributes, 'id' | 'old_password' | 'created_at' | 'updated_at' | 'is_active'>;
 
 export class UserMaster extends Model<UserAttributes, UserCreationAttributes> { }
 //     implements UserAttributes {
@@ -43,10 +41,6 @@ UserMaster.init(
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4,
         },
-        userType: {
-            type: DataTypes.UUID,
-            allowNull: false,
-        },
         name: {
             type: DataTypes.STRING(300),
             allowNull: false,
@@ -65,54 +59,42 @@ UserMaster.init(
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        oldPassword: {
+        old_password: {
             type: DataTypes.TEXT,
             allowNull: true
         },
-        isActive: {
+        is_active: {
             type: DataTypes.BOOLEAN,
-            allowNull: true,
             defaultValue: true
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: true
-        },
+        }
     },
     {
         sequelize,
-        tableName: 'tbl_Users',
+        tableName: 'tbl_customers',
         modelName: modelName,
-        timestamps: false,
+        timestamps: true,
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
         freezeTableName: true,
         defaultScope: {
-            attributes: { exclude: ['password', 'oldPassword'] }
-        }
+            attributes: { exclude: ['password', 'old_password'] }
+        },
     }
 );
 
-UserMaster.belongsTo(UserTypeMaster, { foreignKey: 'userType', targetKey: 'id' });
-
 export const userAccKey = {
     id: `${modelName}.id`,
-    userType: `${modelName}.userType`,
     name: `${modelName}.name`,
     email: `${modelName}.email`,
     mobile: `${modelName}.mobile`,
     password: `${modelName}.password`,
-    oldPassword: `${modelName}.oldPassword`,
-    isActive: `${modelName}.isActive`,
-    createdAt: `${modelName}.createdAt`,
-    updatedAt: `${modelName}.updatedAt`,
+    old_password: `${modelName}.old_password`,
+    is_active: `${modelName}.is_active`,
+    created_at: `${modelName}.created_at`,
+    updated_at: `${modelName}.updated_at`,
 }
 
 export const userCreateSchema = z.object({
-    userType: z.string('userType is required'),
     name: z.string('Name is required')
         .min(4, "Name should be minimum 4 chars")
         .max(100, "Name should be maximum 100 chars"),
@@ -128,7 +110,6 @@ export const userCreateSchema = z.object({
 
 export const userUpdateSchema = z.object({
     id: z.string('id is required'),
-    userType: z.string('userType is required'),
     name: z.string('Name is required')
         .min(4, "Name should be minimum 4 chars")
         .max(100, "Name should be maximum 100 chars"),

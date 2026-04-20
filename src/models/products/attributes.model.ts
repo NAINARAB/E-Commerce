@@ -18,7 +18,7 @@ Attribute.init({
     createdAt: { type: DataTypes.DATE, field: 'created_at', defaultValue: DataTypes.NOW }
 }, { 
     sequelize, 
-    tableName: 'attributes', 
+    tableName: 'tbl_attributes', 
     modelName: 'Attribute', 
     timestamps: false, 
     freezeTableName: true 
@@ -41,7 +41,7 @@ AttributeValue.init({
     value: { type: DataTypes.STRING, allowNull: false }
 }, { 
     sequelize, 
-    tableName: 'attribute_values', 
+    tableName: 'tbl_attribute_values', 
     modelName: 'AttributeValue', 
     timestamps: false, 
     freezeTableName: true 

@@ -5,36 +5,59 @@ import { Company } from '../company/company.model';
 
 export interface BrandAttributes {
     id?: string;
-    companyId: string;
+    company_id: string;
     name: string;
-    slug: string;
-    isActive?: boolean | null;
-    erpId?: string | null;
-    createdAt?: Date | null;
-    updatedAt?: Date | null;
+    is_active?: boolean | null;
+    erp_id?: string | null;
+    created_at?: Date | null;
+    updated_at?: Date | null;
 }
 
-export type BrandCreationAttributes = Optional<BrandAttributes, 'id' | 'isActive' | 'erpId' | 'createdAt' | 'updatedAt'>;
+export type BrandCreationAttributes = Optional<BrandAttributes, 'id' | 'is_active' | 'erp_id' | 'created_at' | 'updated_at'>;
 
 export class Brand extends Model<BrandAttributes, BrandCreationAttributes> {}
 
 Brand.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    companyId: { type: DataTypes.UUID, field: 'company_id', allowNull: false },
-    name: { type: DataTypes.STRING, allowNull: false },
-    slug: { type: DataTypes.STRING, allowNull: false },
-    isActive: { type: DataTypes.BOOLEAN, field: 'is_active', defaultValue: true },
-    erpId: { type: DataTypes.STRING, field: 'erp_id', allowNull: true },
-    createdAt: { type: DataTypes.DATE, field: 'created_at', defaultValue: DataTypes.NOW },
-    updatedAt: { type: DataTypes.DATE, field: 'updated_at', allowNull: true }
-}, { sequelize, tableName: 'brands', modelName: 'Brand', timestamps: false, freezeTableName: true });
-
-export const brandSchema = z.object({
-    companyId: z.string(),
-    name: z.string().min(1),
-    slug: z.string().min(1),
-    isActive: z.boolean().optional(),
-    erpId: z.string().optional().nullable(),
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    company_id: { 
+        type: DataTypes.UUID, 
+        field: 'company_id', 
+        allowNull: false 
+    },
+    name: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    is_active: { 
+        type: DataTypes.BOOLEAN, 
+        field: 'is_active', 
+        defaultValue: true 
+    },
+    erp_id: { 
+        type: DataTypes.STRING, 
+        field: 'erp_id', 
+        allowNull: true 
+    }
+}, { 
+    sequelize, 
+    tableName: 'tbl_brands', 
+    modelName: 'Brand', 
+    timestamps: true, 
+    createdAt: 'created_at', 
+    updatedAt: 'updated_at', 
+    freezeTableName: true 
 });
 
-Brand.belongsTo(Company, { foreignKey: 'companyId', targetKey: 'id' });
+export const brandSchema = z.object({
+    id: z.string().optional(),
+    company_id: z.string('Company id is required'),
+    name: z.string('Name is required').min(1),
+    is_active: z.boolean().optional(),
+    erp_id: z.string().optional().nullable(),
+});
+
+Brand.belongsTo(Company, { foreignKey: 'company_id', targetKey: 'id' });

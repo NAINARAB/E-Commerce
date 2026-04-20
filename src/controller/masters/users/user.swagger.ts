@@ -69,10 +69,6 @@
  *           schema:
  *             type: object
  *             properties:
- *               userType:
- *                 type: string
- *                 description: The UUID of the user type.
- *                 example: 4356789098765645356
  *               name:
  *                 type: string
  *                 description: The user's name.
@@ -114,10 +110,6 @@
  *               id:
  *                 type: string
  *                 description: The UUID of the user to update.
- *                 example: 4356789098765645356
- *               userType:
- *                 type: string
- *                 description: The UUID of the user type.
  *                 example: 4356789098765645356
  *               name:
  *                 type: string

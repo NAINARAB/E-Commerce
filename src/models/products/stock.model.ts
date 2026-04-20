@@ -3,45 +3,75 @@ import { sequelize } from "../../config/sequalizer";
 import { Company } from '../company/company.model';
 import { Shop } from '../company/branch.model';
 import { ProductMaster } from './product.model';
-import { ProductVariant } from './variant.model';
+import { z } from 'zod';
 
 export interface ProductStockAttributes {
     id?: string;
-    companyId: string;
-    shopId?: string | null;
-    productId: string;
-    variantId?: string | null;
-    closingStock?: number | null;
-    reservedStock?: number | null;
-    availableStock?: number | null;
-    lowStockLevel?: number | null;
-    lastStockSyncAt?: Date | null;
+    company_id: string;
+    shop_id: string;
+    product_id: string;
+    reserved_stock: number;
+    available_stock: number;
+    last_stock_sync_at: Date;
 }
 
-export type ProductStockCreationAttributes = Optional<ProductStockAttributes, 'id' | 'shopId' | 'variantId' | 'closingStock' | 'reservedStock' | 'availableStock' | 'lowStockLevel' | 'lastStockSyncAt'>;
+export type ProductStockCreationAttributes = Optional<ProductStockAttributes, 'id' | 'reserved_stock' | 'last_stock_sync_at'>;
 
 export class ProductStock extends Model<ProductStockAttributes, ProductStockCreationAttributes> { }
 
 ProductStock.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    companyId: { type: DataTypes.UUID, field: 'company_id', allowNull: false },
-    shopId: { type: DataTypes.UUID, field: 'shop_id', allowNull: true },
-    productId: { type: DataTypes.UUID, field: 'product_id', allowNull: false },
-    variantId: { type: DataTypes.UUID, field: 'variant_id', allowNull: true },
-    closingStock: { type: DataTypes.DECIMAL(12, 3), field: 'closing_stock', defaultValue: 0 },
-    reservedStock: { type: DataTypes.DECIMAL(12, 3), field: 'reserved_stock', defaultValue: 0 },
-    availableStock: { type: DataTypes.DECIMAL(12, 3), field: 'available_stock', allowNull: true },
-    lowStockLevel: { type: DataTypes.DECIMAL(12, 3), field: 'low_stock_level', allowNull: true },
-    lastStockSyncAt: { type: DataTypes.DATE, field: 'last_stock_sync_at', allowNull: true }
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    company_id: { 
+        type: DataTypes.UUID, 
+        allowNull: false 
+    },
+    shop_id: { 
+        type: DataTypes.UUID, 
+        allowNull: false 
+    },
+    product_id: { 
+        type: DataTypes.UUID, 
+        allowNull: false 
+    },
+    reserved_stock: { 
+        type: DataTypes.DECIMAL(12, 3), 
+        allowNull: false,
+        defaultValue: 0 
+    },
+    available_stock: { 
+        type: DataTypes.DECIMAL(12, 3), 
+        allowNull: false,
+        defaultValue: 0
+    },
+    last_stock_sync_at: { 
+        type: DataTypes.DATE, 
+        allowNull: false,
+        defaultValue: DataTypes.NOW 
+    }
 }, { 
     sequelize, 
-    tableName: 'product_stock', 
+    tableName: 'tbl_product_stock', 
     modelName: 'ProductStock', 
-    timestamps: false, 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at', 
     freezeTableName: true 
 });
 
-ProductStock.belongsTo(Company, { foreignKey: 'companyId', targetKey: 'id' });
-ProductStock.belongsTo(Shop, { foreignKey: 'shopId', targetKey: 'id' });
-ProductStock.belongsTo(ProductMaster, { foreignKey: 'productId', targetKey: 'id' });
-ProductStock.belongsTo(ProductVariant, { foreignKey: 'variantId', targetKey: 'id' });
+ProductStock.belongsTo(Company, { foreignKey: 'company_id', targetKey: 'id' });
+ProductStock.belongsTo(Shop, { foreignKey: 'shop_id', targetKey: 'id' });
+ProductStock.belongsTo(ProductMaster, { foreignKey: 'product_id', targetKey: 'id' });
+
+export const productStockSchema = z.object({
+    id: z.string().optional(),
+    company_id: z.string('Company id is required'),
+    shop_id: z.string('Shop id is required'),
+    product_id: z.string('Product id is required'),
+    reserved_stock: z.number('Reserved stock is required').default(0),
+    available_stock: z.number('Available stock is required'),
+    last_stock_sync_at: z.date().optional(),
+});

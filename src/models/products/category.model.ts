@@ -6,62 +6,126 @@ import { ProductMaster } from './product.model';
 // --- Category ---
 export interface CategoryAttributes {
     id?: string;
-    parentId?: string | null;
+    parent_id?: string | null;
     name: string;
-    slug: string;
-    isActive?: boolean | null;
-    sortOrder?: number | null;
-    erpId?: string | null;
-    createdAt?: Date | null;
-    updatedAt?: Date | null;
+    description: string;
+    is_active: boolean;
+    sort_order: number;
+    created_at?: Date | null;
+    updated_at?: Date | null;
 }
 
+// product category map
 export interface ProductCategoryMapAttributes {
     id?: string;
-    productId: string;
-    categoryId: string;
-    isPrimary?: boolean | null;
+    product_id: string;
+    category_id: string;
+    is_primary?: boolean | null;
 }
 
-export type CategoryCreationAttributes = Optional<CategoryAttributes, 'id' | 'parentId' | 'isActive' | 'sortOrder' | 'erpId' | 'createdAt' | 'updatedAt'>;
+export type CategoryCreationAttributes = Optional<CategoryAttributes, 'id' | 'parent_id' | 'is_active' | 'sort_order' | 'created_at' | 'updated_at'>;
 
 export class Category extends Model<CategoryAttributes, CategoryCreationAttributes> {}
 
-export type ProductCategoryMapCreationAttributes = Optional<ProductCategoryMapAttributes, 'id' | 'isPrimary'>;
+export type ProductCategoryMapCreationAttributes = Optional<ProductCategoryMapAttributes, 'id' | 'is_primary'>;
 
 export class ProductCategoryMap extends Model<ProductCategoryMapAttributes, ProductCategoryMapCreationAttributes> {}
 
 Category.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    parentId: { type: DataTypes.UUID, field: 'parent_id', allowNull: true },
-    name: { type: DataTypes.STRING, allowNull: false },
-    slug: { type: DataTypes.STRING, allowNull: false },
-    isActive: { type: DataTypes.BOOLEAN, field: 'is_active', defaultValue: true },
-    sortOrder: { type: DataTypes.INTEGER, field: 'sort_order', allowNull: true },
-    erpId: { type: DataTypes.STRING, field: 'erp_id', allowNull: true },
-    createdAt: { type: DataTypes.DATE, field: 'created_at', defaultValue: DataTypes.NOW },
-    updatedAt: { type: DataTypes.DATE, field: 'updated_at', allowNull: true }
-}, { sequelize, tableName: 'categories', modelName: 'Category', timestamps: false, freezeTableName: true });
-
-export const categorySchema = z.object({
-    parentId: z.string().optional().nullable(),
-    name: z.string().min(1),
-    slug: z.string().min(1),
-    isActive: z.boolean().optional(),
-    sortOrder: z.number().optional().nullable(),
-    erpId: z.string().optional().nullable(),
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    parent_id: { 
+        type: DataTypes.UUID, 
+        allowNull: true 
+    },
+    name: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    description: { 
+        type: DataTypes.STRING, 
+        allowNull: false 
+    },
+    is_active: { 
+        type: DataTypes.BOOLEAN, 
+        allowNull: false,
+        defaultValue: true 
+    },
+    sort_order: { 
+        type: DataTypes.INTEGER, 
+        allowNull: true,
+        defaultValue: 1 
+    },
+    created_at: { 
+        type: DataTypes.DATE, 
+        allowNull: false,
+        defaultValue: DataTypes.NOW 
+    },
+    updated_at: { 
+        type: DataTypes.DATE, 
+        allowNull: true, 
+        defaultValue: DataTypes.NOW 
+    }
+}, { 
+    sequelize, 
+    tableName: 'tbl_categories', 
+    modelName: 'Category', 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at', 
+    freezeTableName: true 
 });
 
 ProductCategoryMap.init({
-    id: { type: DataTypes.UUID, primaryKey: true, defaultValue: DataTypes.UUIDV4 },
-    productId: { type: DataTypes.UUID, field: 'product_id', allowNull: false },
-    categoryId: { type: DataTypes.UUID, field: 'category_id', allowNull: false },
-    isPrimary: { type: DataTypes.BOOLEAN, field: 'is_primary', defaultValue: false }
-}, { sequelize, tableName: 'product_category_map', modelName: 'ProductCategoryMap', timestamps: false, freezeTableName: true });
+    id: { 
+        type: DataTypes.UUID, 
+        primaryKey: true, 
+        defaultValue: DataTypes.UUIDV4 
+    },
+    product_id: { 
+        type: DataTypes.UUID, 
+        allowNull: false 
+    },
+    category_id: { 
+        type: DataTypes.UUID, 
+        allowNull: false 
+    },
+    is_primary: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: false 
+    }
+}, { 
+    sequelize, 
+    tableName: 'tbl_product_category_map', 
+    modelName: 'ProductCategoryMap', 
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at', 
+    freezeTableName: true 
+});
+
+export const categorySchema = z.object({
+    id: z.string().optional(),
+    parent_id: z.string().optional().nullable(),
+    name: z.string('Category name is required'),
+    sort_order: z.number().optional(),
+    description: z.string('Category description is required'),
+    is_active: z.boolean().optional(),
+});
+
+export const categoryMapSchema = z.object({
+    id: z.string().optional(),
+    product_id: z.string('Product id is required'),
+    category_id: z.string('Category id is required'),
+    is_primary: z.boolean().optional(),
+});
 
 
-Category.belongsTo(Category, { as: 'parent', foreignKey: 'parentId', targetKey: 'id' });
-ProductCategoryMap.belongsTo(ProductMaster, { foreignKey: 'productId', targetKey: 'id' });
-ProductCategoryMap.belongsTo(Category, { foreignKey: 'categoryId', targetKey: 'id' });
+Category.belongsTo(Category, { as: 'parent', foreignKey: 'parent_id', targetKey: 'id' });
+ProductCategoryMap.belongsTo(ProductMaster, { foreignKey: 'product_id', targetKey: 'id' });
+ProductCategoryMap.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id' });
 
 
