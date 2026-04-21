@@ -14,8 +14,8 @@ const options = {
         },
     },
     apis: [
-        path.join(__dirname, "../routes/**/*.ts"),
-        path.join(__dirname, "../controller/**/*.ts"),
+        path.join(__dirname, "../routes/**/*.{ts,js}"),
+        path.join(__dirname, "../controller/**/*.{ts,js}"),
     ],
 };
 

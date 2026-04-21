@@ -20,8 +20,8 @@ const options = {
         },
     },
     apis: [
-        path_1.default.join(__dirname, "../routes/**/*.ts"),
-        path_1.default.join(__dirname, "../controller/**/*.ts"),
+        path_1.default.join(__dirname, "../routes/**/*.{ts,js}"),
+        path_1.default.join(__dirname, "../controller/**/*.{ts,js}"),
     ],
 };
 const swaggerSpec = (0, swagger_jsdoc_1.default)(options);
