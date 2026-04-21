@@ -65,6 +65,7 @@ ProductStock.init({
 ProductStock.belongsTo(Company, { foreignKey: 'company_id', targetKey: 'id' });
 ProductStock.belongsTo(Shop, { foreignKey: 'shop_id', targetKey: 'id' });
 ProductStock.belongsTo(ProductMaster, { foreignKey: 'product_id', targetKey: 'id' });
+ProductMaster.hasMany(ProductStock, { foreignKey: 'product_id', as: 'stocks' });
 
 export const productStockSchema = z.object({
     id: z.string().optional(),

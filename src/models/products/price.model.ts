@@ -82,6 +82,7 @@ ProductPrice.init({
 
 ProductPrice.belongsTo(Company, { foreignKey: 'company_id', targetKey: 'id' });
 ProductPrice.belongsTo(ProductMaster, { foreignKey: 'product_id', targetKey: 'id' });
+ProductMaster.hasMany(ProductPrice, { foreignKey: 'product_id', as: 'prices' });
 
 export const productPriceSchema = z.object({
     id: z.string().optional(),

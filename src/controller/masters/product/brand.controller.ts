@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { created, dataFound, deleted, invalidInput, notFound, sentData, servError, updated } from "../../../response";
 import { validateBody } from "../../../middleware/zodValidator";
-import { Brand, brandSchema } from "../../../models/products/brands.modes";
+import { Brand, brandSchema } from "../../../models/products/brands.model";
 
 
 export const getBrands = async (req: Request, res: Response) => {

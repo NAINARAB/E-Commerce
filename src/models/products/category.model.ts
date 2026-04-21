@@ -128,4 +128,5 @@ Category.belongsTo(Category, { as: 'parent', foreignKey: 'parent_id', targetKey:
 ProductCategoryMap.belongsTo(ProductMaster, { foreignKey: 'product_id', targetKey: 'id' });
 ProductCategoryMap.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id' });
 
-
+ProductMaster.belongsToMany(Category, { through: ProductCategoryMap, foreignKey: 'product_id', otherKey: 'category_id', as: 'categories' });
+Category.belongsToMany(ProductMaster, { through: ProductCategoryMap, foreignKey: 'category_id', otherKey: 'product_id', as: 'products' });
