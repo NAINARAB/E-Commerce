@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const pagination_1 = require("../../middleware/pagination");
+const branch_controller_1 = require("../../controller/masters/company/branch.controller");
+const router = (0, express_1.Router)();
+router.get("/", (0, pagination_1.paginationData)(['name', 'is_active', 'code']), branch_controller_1.getAllBranches);
+router.get("/:id", branch_controller_1.getBranchById);
+router.post("/", branch_controller_1.createBranch);
+router.put("/", branch_controller_1.updateBranch);
+router.delete("/", branch_controller_1.deleteBranch);
+exports.default = router;

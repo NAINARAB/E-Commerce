@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const user_controller_1 = require("../../controller/masters/users/user.controller");
+const pagination_1 = require("../../middleware/pagination");
+const router = (0, express_1.Router)();
+router.get("/", (0, pagination_1.paginationData)(['name', 'email', 'mobile', 'userType', 'is_active']), user_controller_1.getUsers);
+router.get("/:id", user_controller_1.getUserById);
+router.post("/", user_controller_1.createUser);
+router.put("/", user_controller_1.updateUser);
+router.delete("/", user_controller_1.deleteUser);
+router.put("/changePassword", user_controller_1.changePassword);
+exports.default = router;

@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const pagination_1 = require("../../middleware/pagination");
+const company_controller_1 = require("../../controller/masters/company/company.controller");
+const router = (0, express_1.Router)();
+router.get("/", (0, pagination_1.paginationData)(['name', 'is_active', 'code']), company_controller_1.getAllCompanies);
+router.get("/:id", company_controller_1.getCompanyById);
+router.post("/", company_controller_1.createCompany);
+router.put("/", company_controller_1.updateCompany);
+router.delete("/", company_controller_1.deleteCompany);
+exports.default = router;

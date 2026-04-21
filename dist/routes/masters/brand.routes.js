@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const brand_controller_1 = require("../../controller/masters/product/brand.controller");
+const pagination_1 = require("../../middleware/pagination");
+const router = (0, express_1.Router)();
+router.get("/", (0, pagination_1.paginationData)(['name', 'company_id', 'is_active']), brand_controller_1.getBrands);
+router.get("/:id", brand_controller_1.getBrandById);
+router.post("/", brand_controller_1.createBrand);
+router.put("/", brand_controller_1.updateBrand);
+router.delete("/", brand_controller_1.deleteBrand);
+exports.default = router;
