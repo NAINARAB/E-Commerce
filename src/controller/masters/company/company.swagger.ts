@@ -1,16 +1,10 @@
-/**
- * @swagger
- * tags:
- *   name: Company
- *   description: Company management operations
- */
 
 /**
  * @swagger
  * /api/masters/company:
  *   get:
  *     summary: Retrieve a list of companies
- *     tags: [Company]
+ *     tags: [api/masters/company]
  *     parameters:
  *       - in: query
  *         name: page
@@ -39,7 +33,7 @@
  * /api/masters/company/{id}:
  *   get:
  *     summary: Retrieve a single company by ID
- *     tags: [Company]
+ *     tags: [api/masters/company]
  *     parameters:
  *       - in: path
  *         name: id
@@ -61,7 +55,7 @@
  * /api/masters/company:
  *   post:
  *     summary: Create a new company
- *     tags: [Company]
+ *     tags: [api/masters/company]
  *     requestBody:
  *       required: true
  *       content:
@@ -95,7 +89,7 @@
  * /api/masters/company:
  *   put:
  *     summary: Edit a company
- *     tags: [Company]
+ *     tags: [api/masters/company]
  *     requestBody:
  *      required: true
  *      content:
@@ -129,7 +123,7 @@
  * /api/masters/company/{id}:
  *   delete:
  *     summary: Delete a company
- *     tags: [Company]
+ *     tags: [api/masters/company]
  *     parameters:
  *       - in: path
  *         name: id

@@ -8,49 +8,49 @@ import { ProductStock } from "../../../models/products/stock.model";
 import { Category } from "../../../models/products/category.model";
 import { Brand } from "../../../models/products/brands.model";
 
+export const productJoins: any = [
+    {
+        model: ProductPrice,
+        as: 'prices',
+        // separate: true,
+        attributes: ['mrp', 'selling_price', 'discount_amount', 'discount_percentage', 'effective_from', 'effective_to'],
+        order: [['created_at', 'DESC']]
+    },
+    {
+        model: ProductStock,
+        as: 'stocks',
+        // separate: true,
+        attributes: ['shop_id', 'reserved_stock', 'available_stock', 'last_stock_sync_at'],
+        order: [['last_stock_sync_at', 'DESC']]
+    },
+    {
+        model: Category,
+        as: 'categories',
+        attributes: ['id', 'name'],
+        through: { attributes: [] }
+    },
+    {
+        model: Brand,
+        attributes: ['id', 'name']
+    }
+];
+
+export const formatProductsData = (products: any[]) => {
+    return products.map((p) => {
+        const product = p.toJSON ? p.toJSON() : p;
+        product.price = product.prices && product.prices.length > 0 ? product.prices[0] : null;
+        delete product.prices;
+        if (product.Brand) {
+            product.brand = product.Brand;
+            delete product.Brand;
+        }
+        return product;
+    });
+};
+
 export const getProducts = async (req: Request, res: Response) => {
     try {
         const { page, limit, offset, paginate, where } = (req as any).pagination;
-
-        const include: any = [
-            {
-                model: ProductPrice,
-                as: 'prices',
-                separate: true,
-                order: [['created_at', 'DESC']]
-            },
-            {
-                model: ProductStock,
-                as: 'stocks',
-                separate: true,
-                order: [['last_stock_sync_at', 'DESC']]
-            },
-            {
-                model: Category,
-                as: 'categories',
-                attributes: ['id', 'name'],
-                through: { attributes: [] }
-            },
-            {
-                model: Brand,
-                attributes: ['id', 'name']
-            }
-        ];
-
-        const formatData = (products: any[]) => {
-            return products.map((p) => {
-                const product = p.toJSON ? p.toJSON() : p;
-                product.price = product.prices && product.prices.length > 0 ? product.prices[0] : null;
-                product.stock = product.stocks && product.stocks.length > 0 ? product.stocks[0] : null;
-                delete product.prices;
-                delete product.stocks;
-                if (product.Brand) {
-                    product.brand = product.Brand;
-                    delete product.Brand;
-                }
-                return product;
-            });
-        };
 
         if (paginate) {
             const { rows, count } = await ProductMaster.findAndCountAll({
@@ -58,11 +58,11 @@ export const getProducts = async (req: Request, res: Response) => {
                 limit,
                 offset,
                 order: [['product_name', 'ASC']],
-                include,
+                include: productJoins,
                 distinct: true
             });
 
-            return sentData(res, formatData(rows), {
+            return sentData(res, formatProductsData(rows), {
                 totalRecords: count,
                 currentPage: page,
                 totalPages: Math.ceil(count / limit),
@@ -72,10 +72,10 @@ export const getProducts = async (req: Request, res: Response) => {
         const data = await ProductMaster.findAll({
             where,
             order: [['product_name', 'ASC']],
-            include
+            include: productJoins
         });
 
-        sentData(res, formatData(data));
+        sentData(res, formatProductsData(data));
     } catch (e) {
         servError(e, res);
     }

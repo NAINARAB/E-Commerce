@@ -1,16 +1,9 @@
 /**
  * @swagger
- * tags:
- *   name: Brand
- *   description: Brand management operations
- */
-
-/**
- * @swagger
  * /api/masters/brand:
  *   get:
  *     summary: Retrieve a list of brands
- *     tags: [Brand]
+ *     tags: [api/masters/brand]
  *     parameters:
  *       - in: query
  *         name: page
@@ -39,7 +32,7 @@
  * /api/masters/brand/{id}:
  *   get:
  *     summary: Retrieve a single brand by ID
- *     tags: [Brand]
+ *     tags: [api/masters/brand]
  *     parameters:
  *       - in: path
  *         name: id
@@ -61,7 +54,7 @@
  * /api/masters/brand:
  *   post:
  *     summary: Create a new brand
- *     tags: [Brand]
+ *     tags: [api/masters/brand]
  *     requestBody:
  *       required: true
  *       content:
@@ -95,7 +88,7 @@
  * /api/masters/brand:
  *   put:
  *     summary: Update a brand
- *     tags: [Brand]
+ *     tags: [api/masters/brand]
  *     requestBody:
  *       required: true
  *       content:
@@ -133,7 +126,7 @@
  * /api/masters/brand/{id}:
  *   delete:
  *     summary: Delete a brand
- *     tags: [Brand]
+ *     tags: [api/masters/brand]
  *     parameters:
  *       - in: path
  *         name: id

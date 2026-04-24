@@ -81,12 +81,18 @@ ProductVariantValue.init({
     product_id: { 
         type: DataTypes.UUID, 
         field: 'product_id', 
-        allowNull: false 
+        allowNull: false,
+        references: { model: ProductMaster }, 
+        onDelete: 'CASCADE', 
+        onUpdate: 'NO ACTION' 
     },
     variant_id: { 
         type: DataTypes.UUID, 
         field: 'variant_id', 
-        allowNull: false 
+        allowNull: false,
+        references: { model: ProductVariant }, 
+        onDelete: 'CASCADE', 
+        onUpdate: 'NO ACTION' 
     },
 }, { 
     sequelize, 

@@ -1,16 +1,10 @@
-/**
- * @swagger
- * tags:
- *   name: Branch
- *   description: Branch management operations
- */
 
 /**
  * @swagger
  * /api/masters/branch:
  *   get:
  *     summary: Retrieve a list of branches
- *     tags: [Branch]
+ *     tags: [api/masters/branch]
  *     parameters:
  *       - in: query
  *         name: page
@@ -39,7 +33,7 @@
  * /api/masters/branch/{id}:
  *   get:
  *     summary: Retrieve a single branch by ID
- *     tags: [Branch]
+ *     tags: [api/masters/branch]
  *     parameters:
  *       - in: path
  *         name: id
@@ -61,7 +55,7 @@
  * /api/masters/branch:
  *   post:
  *     summary: Create a new branch
- *     tags: [Branch]
+ *     tags: [api/masters/branch]
  *     requestBody:
  *       required: true
  *       content:
@@ -99,7 +93,7 @@
  * /api/masters/branch:
  *   put:
  *     summary: Update a branch
- *     tags: [Branch]
+ *     tags: [api/masters/branch]
  *     requestBody:
  *       required: true
  *       content:
@@ -141,7 +135,7 @@
  * /api/masters/branch/{id}:
  *   delete:
  *     summary: Delete a branch
- *     tags: [Branch]
+ *     tags: [api/masters/branch]
  *     parameters:
  *       - in: path
  *         name: id

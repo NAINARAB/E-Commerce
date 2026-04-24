@@ -1,16 +1,10 @@
-/**
- * @swagger
- * tags:
- *   name: Product Map
- *   description: Product map management operations
- */
 
 /**
  * @swagger
  * /api/masters/product/category_map:
  *   post:
  *     summary: Create a new product category map
- *     tags: [Product Map]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:
@@ -40,7 +34,7 @@
  * /api/masters/product/category:
  *   post:
  *     summary: Create a new product category map
- *     tags: [Product Map]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:
@@ -79,7 +73,7 @@
  * /api/masters/product/image:
  *   post:
  *     summary: Create a new product image map
- *     tags: [Product Map]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:
@@ -127,7 +121,7 @@
  * /api/masters/product/price:
  *   post:
  *     summary: Create a new product price map
- *     tags: [Product Map]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:
@@ -181,7 +175,7 @@
  * /api/masters/product/stock:
  *   post:
  *     summary: Create a new product stock map
- *     tags: [Product Map]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:
@@ -227,7 +221,7 @@
  * /api/masters/product/variant:
  *   post:
  *     summary: Create a new product variant map
- *     tags: [Product Map]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:

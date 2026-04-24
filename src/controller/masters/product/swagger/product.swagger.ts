@@ -1,16 +1,10 @@
-/**
- * @swagger
- * tags:
- *   name: Product
- *   description: Product management operations
- */
 
 /**
  * @swagger
  * /api/masters/product:
  *   get:
  *     summary: Retrieve a list of products
- *     tags: [Product]
+ *     tags: [api/masters/product]
  *     parameters:
  *       - in: query
  *         name: page
@@ -39,7 +33,7 @@
  * /api/masters/product/{id}:
  *   get:
  *     summary: Retrieve a single product by ID
- *     tags: [Product]
+ *     tags: [api/masters/product]
  *     parameters:
  *       - in: path
  *         name: id
@@ -61,7 +55,7 @@
  * /api/masters/product:
  *   post:
  *     summary: Create a new product
- *     tags: [Product]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:
@@ -151,7 +145,7 @@
  * /api/masters/product/:
  *   put:
  *     summary: Update a product
- *     tags: [Product]
+ *     tags: [api/masters/product]
  *     requestBody:
  *       required: true
  *       content:
@@ -245,7 +239,7 @@
  * /api/masters/product/{id}:
  *   delete:
  *     summary: Delete a product
- *     tags: [Product]
+ *     tags: [api/masters/product]
  *     parameters:
  *       - in: path
  *         name: id

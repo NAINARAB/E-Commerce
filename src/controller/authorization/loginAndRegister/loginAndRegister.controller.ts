@@ -12,17 +12,10 @@ export type JwtUser = {
 
 /**
  * @swagger
- * tags:
- *   name: LoginAndRegister
- *   description: Login and register operations
- */
-
-/**
- * @swagger
  * /api/authorization/loginAndRegister/register:
  *   post:
  *     summary: Register a new user
- *     tags: [LoginAndRegister]
+ *     tags: [api/authorization/loginAndRegister]
  *     requestBody:
  *       required: true
  *       content:
@@ -69,7 +62,7 @@ export const register = async (req: Request, res: Response) => {
  *   post:
  *     summary: Login a user
  *     description: Login a user
- *     tags: [LoginAndRegister]
+ *     tags: [api/authorization/loginAndRegister]
  *     requestBody:
  *       required: true
  *       content:

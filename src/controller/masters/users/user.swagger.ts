@@ -1,16 +1,10 @@
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management operations
- */
 
 /**
  * @swagger
  * /api/masters/users:
  *   get:
  *     summary: Retrieve a list of users
- *     tags: [Users]
+ *     tags: [api/masters/users]
  *     parameters:
  *       - in: query
  *         name: page
@@ -39,7 +33,7 @@
  * /api/masters/users/{id}:
  *   get:
  *     summary: Retrieve a single user by ID
- *     tags: [Users]
+ *     tags: [api/masters/users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -61,7 +55,7 @@
  * /api/masters/users:
  *   post:
  *     summary: Create a new user
- *     tags: [Users]
+ *     tags: [api/masters/users]
  *     requestBody:
  *       required: true
  *       content:
@@ -99,7 +93,7 @@
  * /api/masters/users:
  *   put:
  *     summary: Update a user
- *     tags: [Users]
+ *     tags: [api/masters/users]
  *     requestBody:
  *       required: true
  *       content:
@@ -137,7 +131,7 @@
  * /api/masters/users/{id}:
  *   delete:
  *     summary: Delete a user
- *     tags: [Users]
+ *     tags: [api/masters/users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -159,7 +153,7 @@
  * /api/masters/users/changePassword:
  *   put:
  *     summary: Change user password
- *     tags: [Users]
+ *     tags: [api/masters/my-profile]
  *     requestBody:
  *       required: true
  *       content:

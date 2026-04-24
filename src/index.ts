@@ -37,7 +37,11 @@ app.use("/api", (req: Request, res: Response, next: NextFunction) => {
     const host = req.get("host");
     swaggerSpec.servers = [{ url: `${protocol}://${host}` }];
     next();
-}, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}, swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    swaggerOptions: {
+        docExpansion: 'none'
+    }
+}));
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
